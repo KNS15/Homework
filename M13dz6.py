@@ -71,14 +71,14 @@ async def set_growth(message, state):
 @dp.message_handler(state = UserState.growth)
 async def set_weight(message, state):
     await state.update_data(second=message.text)
-    data = await state.get_data()
+    await state.get_data()
     await message.answer('Введите свой вес:')
     await UserState.weight.set()
 
 @dp.message_handler(state = UserState.weight)
 async def send_calories(message, state):
     await state.update_data(weight=message.text)
-    data = await state.get_data()
+    await state.get_data()
     clrs = float(data['weight']) * 10 + float(data['growth']) * 6.25 + float(data['age']) * 5 + 5
     await message.answer(f'Ваша норма калорий: {clrs}')
     await state.finish()
