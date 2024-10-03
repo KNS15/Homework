@@ -1,10 +1,9 @@
 import sqlite3
 
+connection = sqlite3.connect('not_telegram.db')
+cursor = connection.cursor()
 
 def initiate_db():
-    connection = sqlite3.connect('not_telegram.db')
-    cursor = connection.cursor()
-
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS Products(
     id INT PRIMARY KEY,
@@ -46,21 +45,14 @@ def add_user(username, email, age):
     connection = sqlite3.connect('not_telegram.db')
     cursor = connection.cursor()
     cursor.execute("""
-    INSERT INTO Users(username, email, age, balance) VALUES (?, ?, ?, ?)""", (username, email, age, 0))
+    INSERT INTO Users(username, email, age, balance) VALUES (?, ?, ?, ?)""", (username, email, age, 1000))
     connection.commit()
     connection.close()
 
 
 def is_included(username):
-    connection = sqlite3.connect('not_telegram.db')
-    cursor = connection.cursor()
-    users = cursor.execute("""
-    SELECT username FROM Users
-    """).fetchall()
-    for user in users:
-        if username == user[0]:
-            return True
-    return False
+    return bool(cursor.execute('SELECT COUNT(*) FROM Users WHERE username = ?', (username, )
+        ).fetchone()[0])
 
 
 if __name__ == '__main__':
